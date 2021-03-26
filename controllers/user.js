@@ -80,9 +80,7 @@ exports.login = (req, res, next) => {
 };
 
 exports.getOneUser = (req, res, next) => {
-  User.findOne({
-    where: { id: req.params.id }
-  })
+  User.findOne({ where: { id: req.params.id }})
     .then((user) => res.status(200).json(user))
     .catch((error) => res.status(404).json({ error }));
 };
@@ -90,15 +88,22 @@ exports.getOneUser = (req, res, next) => {
 exports.modifyUser = (req, res, next) => {
   User.findOne({ where: { id: req.params.id } })
       .then(user => {
-          user.update(
-              { ...req.body }
-          )
-              .then(() =>
-                  res.status(200).json({ message: 'Votre profil est modifié!' }))
-              .catch(error =>
+          user.update( { ...req.body } )
+              .then(() => res.status(200).json({ message: 'Votre profil est modifié !' }))
+              .catch(error => res.status(400).json({ error }));
+      })
+      .catch(error => res.status(500).json({ error }));
+};
+
+exports.deleteUser = (req, res, next) => {
+  const id = req.params.id
+  User.findOne({ where: { id: id } })
+      .then(user => {
+          user.destroy({ where: { id: id } })
+              .then(() => 
+              res.status(200).json({  message: 'utilisateur supprimé !' }))
+              .catch(error => 
                   res.status(400).json({ error }));
       })
-      .catch(error =>
-          res.status(500).json({ error })
-      );
+      .catch(error => res.status(500).json({ error }));
 };

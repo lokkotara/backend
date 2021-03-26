@@ -9,5 +9,6 @@ router.post('/login', userCtrl.login);//Connecte un utilisateur existant
 
 router.get("/:id", auth, userCtrl.getOneUser);
 router.put("/:id", auth, userCtrl.modifyUser);
+router.delete("/:id", auth, userCtrl.deleteUser);
 
 module.exports = router;
