@@ -1,11 +1,12 @@
 const express = require('express');//Importe le framework express pour node.js
-const helmet = require("helmet");//Importe helmet pour sécuriser les en-têtes des requêtes
+const helmet = require('helmet');//Importe helmet pour sécuriser les en-têtes des requêtes
 const path = require('path');//Permet d'accéder aux chemins d'accès des fichiers
+const dotenv = require('dotenv').config();//Permet de créer un environnement de variables
+const app = express();//Applique le framework express
+
+app.use(helmet());//Met en place les sous-plugins de helmet
 
 const userRoutes = require('./routes/user');//Importe le routeur pour les utilisateurs
-
-const app = express();//Applique le framework express
-app.use(helmet());//Met en place les sous-plugins de helmet
 
 //définit les paramètres d'en-tête
 app.use((req, res, next) => {

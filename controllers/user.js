@@ -40,11 +40,12 @@ exports.signup = (req, res, next) => {
   }
   bcrypt.hash(req.body.password, 10)//On hash le mot de passe et on le sale 10 fois
       .then(hash => {
-        const user = new User({
+        User.create({
+          username:req.body.username,
           email: mask(req.body.email),//L'adresse mail cryptée
-          password: hash//le mot de passe crypté
-        });
-        user.save()//on sauvegarde les données du nouvel utilisateur dans la bdd
+          password: hash,//le mot de passe crypté
+          isAdmin:req.body.isAdmin
+        })
           .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
           .catch(error => res.status(400).json({ error }));
       })

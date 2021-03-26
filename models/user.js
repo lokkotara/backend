@@ -1,13 +1,33 @@
 'use strict';
+const {Sequelize,DataTypes, database} = require('./connexion');
 
-module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define("User", {
-    username: DataTypes.STRING,
-    email: DataTypes.STRING,
+const User = database.define('User', {
+    username: {
+        type: DataTypes.STRING,
+        unique:true
+    },
+    email: {
+        type: DataTypes.STRING,
+        unique:true
+    },
     password: DataTypes.STRING,
-    imageProfile: DataTypes.STRING,
-    bio: DataTypes.TEXT,
-    isAdmin: DataTypes.BOOLEAN
-  });
-  return User;
-};
+    bio: DataTypes.STRING,
+    isAdmin: {
+        type:DataTypes.BOOLEAN,
+        defaultValue:false
+    }
+}, {
+    Sequelize,
+    modelName: 'User',
+    underscored: false,
+    paranoid: true
+}, {
+    classMethods: {
+        associate: function(models) {
+            models.User.hasMany(models.Post)
+        }
+    }
+});
+
+ module.exports = User;
+
