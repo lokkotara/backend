@@ -20,7 +20,7 @@ const User = database.define('User', {
     Sequelize,
     modelName: 'User',
     underscored: false,
-    paranoid: true
+    paranoid: false
 }, {
     classMethods: {
         associate: function(models) {

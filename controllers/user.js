@@ -54,7 +54,8 @@ exports.signup = (req, res, next) => {
 
 //Connecte un utlisateur existant
 exports.login = (req, res, next) => {
-  User.findOne({ email: mask(req.body.email)})//On cherche l'email correspondant dans la collection 
+  const email = mask(req.body.email);
+  User.findOne({ where:{ email }})//On cherche l'email correspondant dans la collection 
     .then(user => {
       if (!user) {
         return res.status(401).json({ error: 'Utilisateur non trouvé !' });

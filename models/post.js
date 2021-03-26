@@ -56,5 +56,5 @@ module.exports = function(sequelize, DataTypes) {
             }
         }
     });
-    return Tchat;
+    return Post;
 };
