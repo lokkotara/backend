@@ -14,7 +14,7 @@ const User = database.define('User', {
     bio: DataTypes.STRING,
     isAdmin: {
         type:DataTypes.BOOLEAN,
-        defaultValue:false
+        defaultValue:0
     }
 }, {
     Sequelize,
