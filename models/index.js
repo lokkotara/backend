@@ -7,7 +7,6 @@ const basename = path.basename(__filename);
 const dotenv = require('dotenv').config ();
 const db = {};
 
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, process.env.DB_PASSWORD, { dialect: "mysql", host: process.env.DB_HOST });
 
 fs
   .readdirSync(__dirname)
