@@ -37,9 +37,8 @@ module.exports = function(sequelize, DataTypes) {
     const Post = sequelize.define('Post', {
         idUser: DataTypes.INTEGER,
         idParent: DataTypes.STRING,
-        // title: DataTypes.STRING,
         content: DataTypes.STRING,
-        imageUrl: DataTypes.STRING,
+        image: DataTypes.STRING,
         likes: DataTypes.INTEGER
     }, {
         sequelize,
