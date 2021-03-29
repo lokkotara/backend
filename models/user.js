@@ -11,9 +11,9 @@ const User = database.define('User', {
         unique: true
     },
     password: DataTypes.STRING,
-    imageProfile: {
+    image: {
         type: DataTypes.STRING,
-        defaultValue:'https://cdn.pixabay.com/photo/2016/04/01/10/11/avatar-1299805_960_720.png'
+        defaultValue:'http://localhost:3000/images/avatarDefault.jpg'
     },
     bio: DataTypes.STRING,
     isAdmin: {

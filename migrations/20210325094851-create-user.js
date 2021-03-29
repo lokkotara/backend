@@ -22,10 +22,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      imageProfile: {
+      image: {
         allowNull: true,
         type: Sequelize.STRING,
-        defaultValue: 'https://cdn.pixabay.com/photo/2016/04/01/10/11/avatar-1299805_960_720.png'
+        defaultValue: 'http://localhost:3000/images/avatarDefault.jpg'
       },
       bio: {
         allowNull: true,

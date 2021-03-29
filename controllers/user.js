@@ -85,13 +85,14 @@ exports.getOneUser = (req, res, next) => {
 };
 
 exports.modifyUser = (req, res, next) => {
-  User.findOne({ where: { id: req.params.id } })
-      .then(user => {
-          user.update( { ...req.body } )
-              .then(() => res.status(200).json({ message: 'Votre profil est modifié !' }))
-              .catch(error => res.status(400).json({ error }));
-      })
-      .catch(error => res.status(500).json({ error }));
+  //Si une nouvelle image est reçue dans la requête
+    User.findOne({ where: { id: req.params.id } })
+        .then(user => {
+          user.update( { ...req.body, image: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`, id: req.params.id} )
+          .then(() => res.status(200).json({ message: 'Votre profil est modifié !' }))
+          .catch(error => res.status(400).json({ error }));
+        })
+        .catch(error => res.status(500).json({ error }));
 };
 
 exports.deleteUser = (req, res, next) => {
