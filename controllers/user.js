@@ -65,9 +65,9 @@ exports.login = (req, res, next) => {
             return res.status(401).json({ error: 'Mot de passe incorrect !' });
           }
           res.status(200).json({
-            userId: user._id,
+            userId: user.id,
             token: jwt.sign(//On attribue un token d'authentification
-              { userId: user._id },
+              { userId: user.id },
               process.env.JWT_SECRET_KEY,
               { expiresIn: '24h' }
             )
@@ -88,7 +88,11 @@ exports.modifyUser = (req, res, next) => {
   //Si une nouvelle image est reçue dans la requête
     User.findOne({ where: { id: req.params.id } })
         .then(user => {
-          user.update( { ...req.body, image: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`, id: req.params.id} )
+  
+          if (req.file) {
+            req.body.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+          }
+          user.update( { ...req.body, id: req.params.id} )
           .then(() => res.status(200).json({ message: 'Votre profil est modifié !' }))
           .catch(error => res.status(400).json({ error }));
         })

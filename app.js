@@ -3,10 +3,10 @@ const helmet = require('helmet');//Importe helmet pour sécuriser les en-têtes 
 const path = require('path');//Permet d'accéder aux chemins d'accès des fichiers
 const dotenv = require('dotenv').config();//Permet de créer un environnement de variables
 const app = express();//Applique le framework express
+const userRoutes = require('./routes/user');//Importe le routeur pour les utilisateurs
 
 app.use(helmet());//Met en place les sous-plugins de helmet
 
-const userRoutes = require('./routes/user');//Importe le routeur pour les utilisateurs
 
 //définit les paramètres d'en-tête
 app.use((req, res, next) => {
