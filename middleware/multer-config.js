@@ -4,11 +4,12 @@ const multer = require('multer');
 const MIME_TYPES = {
   'image/jpg': 'jpg',
   'image/jpeg': 'jpg',
-  'image/png': 'png'
+  'image/png': 'png',
+  'image/gif': 'gif'
 };
 
-//Limite la taille des images à 1024 par 1024 et le poids à 1mb
-const maxSize = 1 * 1024 * 1024; 
+//Limite la taille des images à 1280 par 1280 et le poids à 1mb
+const maxSize = 1 * 1280 * 1280; 
 //Utilise une méthode de multer pour enregistrer les nouvelles images dans le dossier images
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {

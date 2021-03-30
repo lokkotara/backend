@@ -112,11 +112,20 @@ exports.deleteUser = (req, res, next) => {
   const id = req.params.id
   User.findOne({ where: { id: id } })
       .then(user => {
-          user.destroy({ where: { id: id } })
-              .then(() => 
-              res.status(200).json({  message: 'utilisateur supprimé !' }))
-              .catch(error => 
-                  res.status(400).json({ error }));
+        if (user.image !== null){
+          const fileName = user.image.split('/images/')[1]
+          fs.unlink(`images/${fileName}`, (err => {//On supprime l'ancienne image
+            if (err) console.log(err);
+            else {
+                console.log("Image supprimée: " + fileName);
+            }
+          }))
+        }
+        user.destroy({ where: { id: id } })
+            .then(() => 
+            res.status(200).json({  message: 'utilisateur supprimé !' }))
+            .catch(error => 
+                res.status(400).json({ error }));
       })
       .catch(error => res.status(500).json({ error }));
 };
