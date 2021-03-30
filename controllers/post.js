@@ -20,7 +20,19 @@ exports.createPost = (req, res, next) => {
   .catch(error => res.status(400).json({ error }));
 };
 
-exports.modifyPost = (req, res, next) => {};
+exports.modifyPost = (req, res, next) => {
+  Post.findOne({ where: { id: req.params.id } })
+  .then(post => {
+
+    if (req.file) {
+      req.body.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+    }
+    post.update( { ...req.body, id: req.params.id} )
+    .then(() => res.status(200).json({ message: 'Votre post est modifié !' }))
+    .catch(error => res.status(400).json({ error }));
+  })
+  .catch(error => res.status(500).json({ error }));
+};
 
 exports.deletePost = (req, res, next) => {};
 
