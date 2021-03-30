@@ -32,18 +32,20 @@
 // };
 
 'use strict';
-//const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
-    const Post = sequelize.define('Post', {
+const {Sequelize,DataTypes, database} = require('./connexion');
+
+const Post= database.define('Post', {
         idUser: DataTypes.INTEGER,
         idParent: DataTypes.STRING,
         content: DataTypes.STRING,
         image: DataTypes.STRING,
-        likes: DataTypes.INTEGER
+        likes: DataTypes.INTEGER,
+        usersLiked: DataTypes.JSON
     }, {
-        sequelize,
+        Sequelize,
         modelName: 'Post',
-        paranoid: true
+        underscored: false,
+        paranoid: false
     }, {
         classMethods: {
             associate: function(models) {
@@ -55,5 +57,5 @@ module.exports = function(sequelize, DataTypes) {
             }
         }
     });
-    return Post;
-};
+
+ module.exports = Post;

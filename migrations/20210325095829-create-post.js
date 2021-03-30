@@ -29,6 +29,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue: 0
       },
+      usersLiked: {
+        allowNull: true,
+        type: Sequelize.JSON
+      },
       idParent: {
         allowNull: true,
         type: Sequelize.INTEGER

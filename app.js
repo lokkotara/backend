@@ -4,6 +4,7 @@ const path = require('path');//Permet d'accéder aux chemins d'accès des fichie
 const dotenv = require('dotenv').config();//Permet de créer un environnement de variables
 const app = express();//Applique le framework express
 const userRoutes = require('./routes/user');//Importe le routeur pour les utilisateurs
+const postRoutes = require('./routes/post');//Importe le routeur pour les posts
 
 app.use(helmet());//Met en place les sous-plugins de helmet
 
@@ -21,6 +22,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
 app.use('/api/auth', userRoutes);//Sert les routes concernant les utilisateurs pour toutes demande vers le endpoint /api/auth
+app.use('/api/post', postRoutes);//Sert les routes concernant les utilisateurs pour toutes demande vers le endpoint /api/auth
 
 
 module.exports = app;
