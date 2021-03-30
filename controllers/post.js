@@ -24,13 +24,15 @@ exports.modifyPost = (req, res, next) => {
   Post.findOne({ where: { id: req.params.id } })
   .then(post => {
     if (req.file) {
-      const fileName = post.image.split('/images/')[1]
-      fs.unlink(`images/${fileName}`, (err => {//On supprime l'ancienne image
-        if (err) console.log(err);
-        else {
-            console.log("Image supprimée: " + fileName);
-        }
-      }))
+      if (post.image !== null){
+        const fileName = post.image.split('/images/')[1]
+        fs.unlink(`images/${fileName}`, (err => {//On supprime l'ancienne image
+          if (err) console.log(err);
+          else {
+              console.log("Image supprimée: " + fileName);
+          }
+        }))
+      }
       req.body.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
     }
     post.update( { ...req.body, id: req.params.id} )
