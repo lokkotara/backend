@@ -9,8 +9,6 @@ exports.createPost = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
   const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
   const userId = decodedToken.userId;  
-  const userName = decodedToken.userName; 
-  console.log("userId : " + userId);
   Post.create ({
     idUser: userId,
     image: (req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null),//On génère l'url grâce à son nom de fichier
