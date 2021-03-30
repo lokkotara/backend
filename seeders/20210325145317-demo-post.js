@@ -3,7 +3,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert('Posts', [{
-      userId: 1,
+      idUser: 1,
       content: 'Ceci est un post',
       createdAt: new Date(),
       updatedAt: new Date()
