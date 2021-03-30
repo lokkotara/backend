@@ -89,8 +89,16 @@ exports.modifyUser = (req, res, next) => {
   //Si une nouvelle image est reçue dans la requête
     User.findOne({ where: { id: req.params.id } })
         .then(user => {
-  
           if (req.file) {
+            if (user.image !== null){
+              const fileName = user.image.split('/images/')[1]
+              fs.unlink(`images/${fileName}`, (err => {//On supprime l'ancienne image
+                if (err) console.log(err);
+                else {
+                    console.log("Image supprimée: " + fileName);
+                }
+              }))
+            }
             req.body.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
           }
           user.update( { ...req.body, id: req.params.id} )
