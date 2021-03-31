@@ -64,8 +64,49 @@ exports.deletePost = (req, res, next) => {
       .catch(error => res.status(500).json({ error }));
 };
 
-exports.likePost = (req, res, next) => {};
+exports.likePost = (req, res, next) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+  const user = decodedToken.userId;
+  const like = req.body.likes;
+  console.log(User);
+  Post.findOne({ where: { id: req.params.id } })//On sélectionne la sauce par son id
+    .then((post) => {
+      const usersLiked = post.usersLiked;
+      //Définit le statut de like
+      switch(like) {
+        case 1://s'il est égale à 1 et que le tableau usersLiked ne contient pas déjà l'id
+          if(!usersLiked.includes(user)){
+            post.update({
+              likes: post.likes +1,//on ajoute 1 au likes
+              usersLiked: [usersLiked.push({User})]//et on ajoute l'id de l'utilisateur au tableau usersLiked
+            }, { id: req.params.id })
+            .then(() => res.status(200).json({message: 'Vote positif !'}))
+            .catch(error => res.status(400).json({error}))
+          }
+          break;
+        case 0://s'il est égale à 0
+          if (usersLiked.includes(user)) {//et que usersLiked contient l'userId
+            post.update({
+                likes: post.likes - 1,//on retire 1 à likes
+                usersLiked: [usersLiked.pull(user)]//et on sort l'id du tableau usersLiked
+            }, { id: req.params.id })
+                .then(() => res.status(200).json({message: 'Vote réinitialisé !'}))
+                .catch(error => res.status(400).json({error}))
+          } 
+      }
+    })
+    .catch(error => res.status(400).json({ error }));
+};
 
-exports.getOnePost = (req, res, next) => {};
+exports.getOnePost = (req, res, next) => {
+  Post.findOne({ _id: req.params.id })//On récupère le post correspondant à l'id
+  .then(post => res.status(200).json(post))
+  .catch(error => res.status(404).json({ error }));
+};
 
-exports.getAllPosts = (req, res, next) => {};
+exports.getAllPosts = (req, res, next) => {
+  Post.findAll()//On récupère tous les posts de la table
+  .then(posts => res.status(200).json(posts))
+  .catch(error => res.status(400).json({ error }));
+};
