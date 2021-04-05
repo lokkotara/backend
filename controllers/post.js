@@ -56,10 +56,8 @@ exports.deletePost = (req, res, next) => {
           }))
         }
         post.destroy({ where: { id: id } })
-            .then(() => 
-            res.status(200).json({  message: 'post supprimé !' }))
-            .catch(error => 
-                res.status(400).json({ error }));
+            .then(() => res.status(200).json({  message: 'post supprimé !' }))
+            .catch(error => res.status(400).json({ error }));
       })
       .catch(error => res.status(500).json({ error }));
 };
@@ -69,17 +67,16 @@ exports.likePost = (req, res, next) => {
   const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
   const user = decodedToken.userId;
   const like = req.body.likes;
-  console.log(User);
   Post.findOne({ where: { id: req.params.id } })//On sélectionne la sauce par son id
     .then((post) => {
-      const usersLiked = post.usersLiked;
+      // const usersLiked = post.usersLiked;
       //Définit le statut de like
       switch(like) {
         case 1://s'il est égale à 1 et que le tableau usersLiked ne contient pas déjà l'id
           if(!usersLiked.includes(user)){
             post.update({
               likes: post.likes +1,//on ajoute 1 au likes
-              usersLiked: [usersLiked.push({User})]//et on ajoute l'id de l'utilisateur au tableau usersLiked
+              // usersLiked: req.body.usersLiked
             }, { id: req.params.id })
             .then(() => res.status(200).json({message: 'Vote positif !'}))
             .catch(error => res.status(400).json({error}))
@@ -89,7 +86,7 @@ exports.likePost = (req, res, next) => {
           if (usersLiked.includes(user)) {//et que usersLiked contient l'userId
             post.update({
                 likes: post.likes - 1,//on retire 1 à likes
-                usersLiked: [usersLiked.pull(user)]//et on sort l'id du tableau usersLiked
+                // usersLiked: [usersLiked.pull(user)]//et on sort l'id du tableau usersLiked
             }, { id: req.params.id })
                 .then(() => res.status(200).json({message: 'Vote réinitialisé !'}))
                 .catch(error => res.status(400).json({error}))
