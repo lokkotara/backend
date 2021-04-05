@@ -51,8 +51,11 @@ const Post= database.define('Post', {
             associate: function(models) {
                 models.Post.belongsTo(models.User, {
                     foreignKey: {
-                        allowNull:false
-                    }
+                        allowNull:false,
+                    },
+                    constraints: true,
+                    onDelete:'CASCADE',
+                    hooks: true
                 })
             }
         }

@@ -13,8 +13,11 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Users',
-          key: 'id'
-        }
+          key: 'id',
+        },
+        constraints: true,
+        onDelete: 'CASCADE',
+        hooks: true
       },
       idParent: {
         allowNull: true,
