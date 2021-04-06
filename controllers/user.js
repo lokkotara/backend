@@ -67,8 +67,9 @@ exports.login = (req, res, next) => {
           }
           res.status(200).json({
             userId: user.id,
+            isAdmin: user.isAdmin,
             token: jwt.sign(//On attribue un token d'authentification
-              { userId: user.id },
+              { userId: user.id, isAdmin: user.isAdmin },
               process.env.JWT_SECRET_KEY,
               { expiresIn: '24h' }
             )
@@ -110,20 +111,28 @@ exports.modifyUser = (req, res, next) => {
 
 exports.deleteUser = (req, res, next) => {
   const id = req.params.id
-  User.findOne({ where: { id: id } })
-      .then(user => {
-        if (user.image !== null){
-          const fileName = user.image.split('/images/')[1]
-          fs.unlink(`images/${fileName}`, (err => {//On supprime l'ancienne image
-            if (err) console.log(err);
-            else {
-                console.log("Image supprimée: " + fileName);
-            }
-          }))
-        }
-        user.destroy({ where: { id: id } })
-            .then(() => res.status(200).json({  message: 'utilisateur supprimé !' }))
-            .catch(error =>  res.status(400).json({ error }));
-      })
-      .catch(error => res.status(500).json({ error }));
+  const token = req.headers.authorization.split(' ')[1];//On extrait le token de la requête
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);//On décrypte le token grâce à la clé secrète
+  const userId = decodedToken.userId;//On récupère l'userId du token décrypté
+  const isAdmin = decodedToken.isAdmin;
+  if(id == userId || isAdmin == true){
+    User.findOne({ where: { id: id } })
+        .then(user => {
+          if (user.image !== null){
+            const fileName = user.image.split('/images/')[1]
+            fs.unlink(`images/${fileName}`, (err => {//On supprime l'ancienne image
+              if (err) console.log(err);
+              else {
+                  console.log("Image supprimée: " + fileName);
+              }
+            }))
+          }
+          user.destroy({ where: { id: id } })
+              .then(() => res.status(200).json({  message: 'utilisateur supprimé !' }))
+              .catch(error =>  res.status(400).json({ error }));
+        })
+        .catch(error => res.status(500).json({ error }));
+  }else {
+    return res.status(401).json({ error: "vous n'avez pas l'autorisation nécessaire !" });
+  }
 };
