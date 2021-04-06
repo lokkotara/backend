@@ -122,10 +122,8 @@ exports.deleteUser = (req, res, next) => {
           }))
         }
         user.destroy({ where: { id: id } })
-            .then(() => 
-            res.status(200).json({  message: 'utilisateur supprimé !' }))
-            .catch(error => 
-                res.status(400).json({ error }));
+            .then(() => res.status(200).json({  message: 'utilisateur supprimé !' }))
+            .catch(error =>  res.status(400).json({ error }));
       })
       .catch(error => res.status(500).json({ error }));
 };
