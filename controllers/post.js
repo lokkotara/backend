@@ -20,6 +20,7 @@ exports.createPost = (req, res, next) => {
   .catch(error => res.status(400).json({ error }));
 };
 
+//Modifier un post
 exports.modifyPost = (req, res, next) => {
   const id = req.params.id;
   const token = req.headers.authorization.split(' ')[1];//On extrait le token de la requête
@@ -51,6 +52,7 @@ exports.modifyPost = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 };
 
+//Supprimer un post
 exports.deletePost = (req, res, next) => {
   const id = req.params.id;
   const token = req.headers.authorization.split(' ')[1];//On extrait le token de la requête
@@ -79,6 +81,7 @@ exports.deletePost = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 };
 
+//Aimer un post
 exports.likePost = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
   const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
@@ -113,12 +116,14 @@ exports.likePost = (req, res, next) => {
     .catch(error => res.status(400).json({ error }));
 };
 
+//Afficher un post
 exports.getOnePost = (req, res, next) => {
   Post.findOne({ _id: req.params.id })//On récupère le post correspondant à l'id
   .then(post => res.status(200).json(post))
   .catch(error => res.status(404).json({ error }));
 };
 
+//Afficher tous les posts
 exports.getAllPosts = (req, res, next) => {
   Post.findAll()//On récupère tous les posts de la table
   .then(posts => res.status(200).json(posts))

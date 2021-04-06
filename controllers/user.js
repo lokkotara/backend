@@ -80,12 +80,14 @@ exports.login = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 };
 
+//Obtenir les infos sur un utilisateur
 exports.getOneUser = (req, res, next) => {
   User.findOne({ where: { id: req.params.id }})
     .then((user) => res.status(200).json(user))
     .catch((error) => res.status(404).json({ error }));
 };
 
+//Modifier un utilisateur
 exports.modifyUser = (req, res, next) => {
   const id = req.params.id
   const token = req.headers.authorization.split(' ')[1];//On extrait le token de la requête
@@ -117,6 +119,7 @@ exports.modifyUser = (req, res, next) => {
   }
 };
 
+//Supprimer un utilisateur
 exports.deleteUser = (req, res, next) => {
   const id = req.params.id
   const token = req.headers.authorization.split(' ')[1];//On extrait le token de la requête
