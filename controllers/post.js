@@ -21,25 +21,34 @@ exports.createPost = (req, res, next) => {
 };
 
 exports.modifyPost = (req, res, next) => {
-  Post.findOne({ where: { id: req.params.id } })
-  .then(post => {
-    if (req.file) {
-      if (post.image !== null){
-        const fileName = post.image.split('/images/')[1]
-        fs.unlink(`images/${fileName}`, (err => {//On supprime l'ancienne image
-          if (err) console.log(err);
-          else {
-              console.log("Image supprimée: " + fileName);
+  const id = req.params.id;
+  const token = req.headers.authorization.split(' ')[1];//On extrait le token de la requête
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);//On décrypte le token grâce à la clé secrète
+  const userId = decodedToken.userId;//On récupère l'userId du token décrypté
+  const isAdmin = decodedToken.isAdmin;//On récupère l'userId du token décrypté
+  Post.findOne({ where: { id: id } })
+    .then(post => {
+      if(post.idUser == userId || isAdmin == true) {
+        if (req.file) {
+          if (post.image !== null){
+            const fileName = post.image.split('/images/')[1]
+            fs.unlink(`images/${fileName}`, (err => {//On supprime l'ancienne image
+              if (err) console.log(err);
+              else {
+                  console.log("Image supprimée: " + fileName);
+              }
+            }))
           }
-        }))
+          req.body.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+        }
+        post.update( { ...req.body, id: req.params.id} )
+        .then(() => res.status(200).json({ message: 'Votre post est modifié !' }))
+        .catch(error => res.status(400).json({ error }));
+      }else {
+        return res.status(401).json({ error: "vous n'avez pas l'autorisation nécessaire !" });
       }
-      req.body.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-    }
-    post.update( { ...req.body, id: req.params.id} )
-    .then(() => res.status(200).json({ message: 'Votre post est modifié !' }))
-    .catch(error => res.status(400).json({ error }));
-  })
-  .catch(error => res.status(500).json({ error }));
+    })
+    .catch(error => res.status(500).json({ error }));
 };
 
 exports.deletePost = (req, res, next) => {
