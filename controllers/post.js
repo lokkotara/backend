@@ -1,5 +1,5 @@
 const Post = require('../models/post'); //On importe le modèle de sauce
-const User = require('../models/user'); //On importe le modèle de sauce
+const Comment = require('../models/comment'); //On importe le modèle de sauce
 const fs = require('fs'); //système de gestion de fichier de Node
 const jwt = require('jsonwebtoken');
 
@@ -11,10 +11,10 @@ exports.createPost = (req, res, next) => {
   const userId = decodedToken.userId;  
   Post.create ({
     idUser: userId,
-    image: (req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null),//On génère l'url grâce à son nom de fichier
+    // image: (req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null),//On génère l'url grâce à son nom de fichier
     content: req.body.content,
     likes: 0,
-    usersLiked: [],
+    // usersLiked: [],
   })
   .then(() => res.status(201).json({ message: 'Post enregistré !' }))
   .catch(error => res.status(400).json({ error }));
@@ -128,4 +128,26 @@ exports.getAllPosts = (req, res, next) => {
   Post.findAll()//On récupère tous les posts de la table
   .then(posts => res.status(200).json(posts))
   .catch(error => res.status(400).json({ error }));
+};
+
+//Commenter un post
+exports.commentPost = (req, res, next) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+  const user = decodedToken.userId;
+  const postId = req.params.id;
+  Comment.create ({
+    idUser: user,
+    idPost: postId,
+    content: req.body.content
+  }),
+  Post.findOne({ where: { id: postId } })//On sélectionne la sauce par son id
+    .then((post) => {
+      post.update({
+        comments: post.comments +1,//on ajoute 1 au likes
+      }, { id: postId })
+      .then(() => res.status(200).json({message: 'Nouveau commentaire envoyé !'}))
+      .catch(error => res.status(400).json({error}))
+    })
+    .catch(error => res.status(400).json({ error }));
 };
