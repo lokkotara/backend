@@ -1,5 +1,6 @@
 const Post = require('../models/post'); //On importe le modèle de sauce
 const Comment = require('../models/comment'); //On importe le modèle de sauce
+const Like = require('../models/like'); //On importe le modèle de sauce
 const fs = require('fs'); //système de gestion de fichier de Node
 const jwt = require('jsonwebtoken');
 
@@ -86,27 +87,32 @@ exports.likePost = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
   const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
   const user = decodedToken.userId;
+  const postId = req.params.id;
   const like = req.body.likes;
-  Post.findOne({ where: { id: req.params.id } })//On sélectionne la sauce par son id
+  Post.findOne({ where: { id: postId } })//On sélectionne le post par son id
     .then((post) => {
-      // const usersLiked = post.usersLiked;
+      console.log("post : "+post);
       //Définit le statut de like
       switch(like) {
         case 1://s'il est égale à 1 et que le tableau usersLiked ne contient pas déjà l'id
-          if(!usersLiked.includes(user)){
+        console.log(Like.findOne({ where: { id: user } }));
+        if(user != null){
+            Like.create ({
+              idUser: user,
+              idPost: postId,
+            }),
             post.update({
               likes: post.likes +1,//on ajoute 1 au likes
-              // usersLiked: req.body.usersLiked
             }, { id: req.params.id })
             .then(() => res.status(200).json({message: 'Vote positif !'}))
             .catch(error => res.status(400).json({error}))
           }
           break;
         case 0://s'il est égale à 0
-          if (usersLiked.includes(user)) {//et que usersLiked contient l'userId
+          if (user != null) {//et que usersLiked contient l'userId
+            Like.destroy ( { where: { idUser: user, idPost:postId } }),
             post.update({
                 likes: post.likes - 1,//on retire 1 à likes
-                // usersLiked: [usersLiked.pull(user)]//et on sort l'id du tableau usersLiked
             }, { id: req.params.id })
                 .then(() => res.status(200).json({message: 'Vote réinitialisé !'}))
                 .catch(error => res.status(400).json({error}))
@@ -141,10 +147,10 @@ exports.commentPost = (req, res, next) => {
     idPost: postId,
     content: req.body.content
   }),
-  Post.findOne({ where: { id: postId } })//On sélectionne la sauce par son id
+  Post.findOne({ where: { id: postId } })//On sélectionne le post par son id
     .then((post) => {
       post.update({
-        comments: post.comments +1,//on ajoute 1 au likes
+        comments: post.comments +1,//on ajoute 1 au comments
       }, { id: postId })
       .then(() => res.status(200).json({message: 'Nouveau commentaire envoyé !'}))
       .catch(error => res.status(400).json({error}))
