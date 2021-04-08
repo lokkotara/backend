@@ -44,6 +44,14 @@ const Like= database.define('Like', {
                     onDelete:'CASCADE',
                     hooks: true
                 })
+                models.Like.belongsTo(models.User, {
+                    foreignKey: {
+                        allowNull:false,
+                    },
+                    constraints: true,
+                    onDelete:'CASCADE',
+                    hooks: true
+                })
             }
         }
     });
