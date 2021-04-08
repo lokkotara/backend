@@ -15,7 +15,7 @@ exports.createPost = (req, res, next) => {
     // image: (req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null),//On génère l'url grâce à son nom de fichier
     content: req.body.content,
     likes: 0,
-    // usersLiked: [],
+    comments:0
   })
   .then(() => res.status(201).json({ message: 'Post enregistré !' }))
   .catch(error => res.status(400).json({ error }));
@@ -31,18 +31,18 @@ exports.modifyPost = (req, res, next) => {
   Post.findOne({ where: { id: id } })
     .then(post => {
       if(post.idUser == userId || isAdmin == true) {
-        if (req.file) {
-          if (post.image !== null){
-            const fileName = post.image.split('/images/')[1]
-            fs.unlink(`images/${fileName}`, (err => {//On supprime l'ancienne image
-              if (err) console.log(err);
-              else {
-                  console.log("Image supprimée: " + fileName);
-              }
-            }))
-          }
-          req.body.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-        }
+        // if (req.file) {
+        //   if (post.image !== null){
+        //     const fileName = post.image.split('/images/')[1]
+        //     fs.unlink(`images/${fileName}`, (err => {//On supprime l'ancienne image
+        //       if (err) console.log(err);
+        //       else {
+        //           console.log("Image supprimée: " + fileName);
+        //       }
+        //     }))
+        //   }
+        //   req.body.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+        // }
         post.update( { ...req.body, id: req.params.id} )
         .then(() => res.status(200).json({ message: 'Votre post est modifié !' }))
         .catch(error => res.status(400).json({ error }));
@@ -155,3 +155,53 @@ exports.commentPost = (req, res, next) => {
     })
     .catch(error => res.status(400).json({ error }));
 };
+
+//Modifier un commentaire
+exports.modifyCommentPost = (req, res, next) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+  const user = decodedToken.userId;
+  const postId = req.params.id;
+  Comment.create ({
+    idUser: user,
+    idPost: postId,
+    content: req.body.content
+  }),
+  Post.findOne({ where: { id: postId } })//On sélectionne le post par son id
+    .then((post) => {
+      post.update({
+        comments: post.comments +1,//on ajoute 1 au comments
+      }, { id: postId })
+      .then(() => res.status(200).json({message: 'Nouveau commentaire envoyé !'}))
+      .catch(error => res.status(400).json({error}))
+    })
+    .catch(error => res.status(400).json({ error }));
+};
+
+//Supprimer un commentaire
+exports.deleteCommentPost = (req, res, next) => {
+  const id = req.params.id;
+  const token = req.headers.authorization.split(' ')[1];//On extrait le token de la requête
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);//On décrypte le token grâce à la clé secrète
+  const userId = decodedToken.userId;//On récupère l'userId du token décrypté
+  const isAdmin = decodedToken.isAdmin;//On récupère l'userId du token décrypté
+  Comment.findOne({ where: { id: id } })
+    .then(comment => {
+      if(comment.idUser == userId || isAdmin == true) {
+        comment.destroy({ where: { id: id } }),
+        Post.findOne({ where: { id: comment.idPost } })//On sélectionne le post par son id
+          .then((post) => {
+            post.update({
+              comments: post.comments -1,//on ajoute 1 au comments
+            }, { id: comment.idPost })
+          .then(() => res.status(200).json({  message: 'commentaire supprimé !' }))
+          .catch(error => res.status(400).json({ error }));
+        })
+        .catch(error => res.status(400).json({ error }));
+      }else {
+        return res.status(401).json({ error: "vous n'avez pas l'autorisation nécessaire !" });
+      }
+    })
+    .catch(error => res.status(500).json({ error }));
+};
+

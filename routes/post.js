@@ -10,6 +10,8 @@ router.patch('/:id', auth, multer, postCtrl.modifyPost);//Permet de modifier un 
 router.delete('/:id', auth, postCtrl.deletePost);//Supprime un post
 router.post('/:id/like', auth, postCtrl.likePost);//Permet de liker le post
 router.post('/:id/comment', auth, postCtrl.commentPost);//Permet de commenter le post
+router.patch('/:id/comment', auth, postCtrl.modifyCommentPost);//Permet de commenter le post
+router.delete('/:id/comment', auth, postCtrl.deleteCommentPost);//Permet de commenter le post
 router.get('/:id', auth, postCtrl.getOnePost);//Récupère un seul post
 router.get('/', auth, postCtrl.getAllPosts);//Récupère tous les posts
 
