@@ -89,37 +89,35 @@ exports.likePost = (req, res, next) => {
   const user = decodedToken.userId;
   const postId = req.params.id;
   const like = req.body.likes;
-  Post.findOne({ where: { id: postId } })//On sélectionne le post par son id
-    .then((post) => {
-      console.log("post : "+post);
-      //Définit le statut de like
-      switch(like) {
-        case 1://s'il est égale à 1 et que le tableau usersLiked ne contient pas déjà l'id
-        console.log(Like.findOne({ where: { id: user } }));
-        if(user != null){
-            Like.create ({
-              idUser: user,
-              idPost: postId,
-            }),
+  if (like == 1){
+    Like.findOrCreate({ where : { idPost: postId, idUser: user } })
+    .then (([like, isNotPresent])=> {
+      if(isNotPresent) {
+        Post.findOne({ where: { id: postId } })//On sélectionne le post par son id
+          .then((post) => {
             post.update({
               likes: post.likes +1,//on ajoute 1 au likes
             }, { id: req.params.id })
             .then(() => res.status(200).json({message: 'Vote positif !'}))
             .catch(error => res.status(400).json({error}))
-          }
-          break;
-        case 0://s'il est égale à 0
-          if (user != null) {//et que usersLiked contient l'userId
-            Like.destroy ( { where: { idUser: user, idPost:postId } }),
+          })
+      } else {
+        res.status(400).json({message:"Déjà liké !"})
+      }
+    })
+    .catch(error => res.status(400).json({error}))
+  }else {
+    Post.findOne({ where: { id: postId } })//On sélectionne le post par son id
+    .then((post) => {
+      Like.destroy ( { where: { idUser: user, idPost:postId } }),
             post.update({
                 likes: post.likes - 1,//on retire 1 à likes
             }, { id: req.params.id })
                 .then(() => res.status(200).json({message: 'Vote réinitialisé !'}))
                 .catch(error => res.status(400).json({error}))
-          } 
-      }
     })
     .catch(error => res.status(400).json({ error }));
+  }
 };
 
 //Afficher un post
