@@ -27,10 +27,9 @@ exports.modifyPost = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];//On extrait le token de la requête
   const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);//On décrypte le token grâce à la clé secrète
   const userId = decodedToken.userId;//On récupère l'userId du token décrypté
-  const isAdmin = decodedToken.isAdmin;//On récupère l'userId du token décrypté
   Post.findOne({ where: { id: id } })
     .then(post => {
-      if(post.idUser == userId || isAdmin == true) {
+      if(post.idUser == userId) {
         // if (req.file) {
         //   if (post.image !== null){
         //     const fileName = post.image.split('/images/')[1]
@@ -158,24 +157,21 @@ exports.commentPost = (req, res, next) => {
 
 //Modifier un commentaire
 exports.modifyCommentPost = (req, res, next) => {
-  const token = req.headers.authorization.split(' ')[1];
-  const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
-  const user = decodedToken.userId;
-  const postId = req.params.id;
-  Comment.create ({
-    idUser: user,
-    idPost: postId,
-    content: req.body.content
-  }),
-  Post.findOne({ where: { id: postId } })//On sélectionne le post par son id
-    .then((post) => {
-      post.update({
-        comments: post.comments +1,//on ajoute 1 au comments
-      }, { id: postId })
-      .then(() => res.status(200).json({message: 'Nouveau commentaire envoyé !'}))
-      .catch(error => res.status(400).json({error}))
+  const id = req.params.id;
+  const token = req.headers.authorization.split(' ')[1];//On extrait le token de la requête
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);//On décrypte le token grâce à la clé secrète
+  const userId = decodedToken.userId;//On récupère l'userId du token décrypté
+  Comment.findOne({ where: { id: id } })
+    .then(comment => {
+      if(comment.idUser == userId) {
+        comment.update( { ...req.body, id: req.params.id} )
+        .then(() => res.status(200).json({ message: 'Votre commentaire est modifié !' }))
+        .catch(error => res.status(400).json({ error }));
+      }else {
+        return res.status(401).json({ error: "vous n'avez pas l'autorisation nécessaire !" });
+      }
     })
-    .catch(error => res.status(400).json({ error }));
+    .catch(error => res.status(500).json({ error }));
 };
 
 //Supprimer un commentaire
