@@ -89,7 +89,7 @@ exports.getOneUser = (req, res, next) => {
 
 //Modifier un utilisateur
 exports.modifyUser = (req, res, next) => {
-  const id = req.params.id
+  const id = JSON.parse(req.params.id)
   const token = req.headers.authorization.split(' ')[1];//On extrait le token de la requête
   const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);//On décrypte le token grâce à la clé secrète
   const userId = decodedToken.userId;//On récupère l'userId du token décrypté
@@ -122,12 +122,12 @@ exports.modifyUser = (req, res, next) => {
 
 //Supprimer un utilisateur
 exports.deleteUser = (req, res, next) => {
-  const id = req.params.id
+  const id = JSON.parse(req.params.id)
   const token = req.headers.authorization.split(' ')[1];//On extrait le token de la requête
   const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);//On décrypte le token grâce à la clé secrète
   const userId = decodedToken.userId;//On récupère l'userId du token décrypté
   const isAdmin = decodedToken.isAdmin;
-  if(id == userId || isAdmin == true){
+  if(id === userId || isAdmin === true){
     User.findOne({ where: { id: id } })
         .then(user => {
           if (user.image !== null){

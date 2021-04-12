@@ -29,7 +29,7 @@ exports.modifyPost = (req, res, next) => {
   const userId = decodedToken.userId;//On récupère l'userId du token décrypté
   Post.findOne({ where: { id: id } })
     .then(post => {
-      if(post.idUser == userId) {
+      if(post.idUser === userId) {
         // if (req.file) {
         //   if (post.image !== null){
         //     const fileName = post.image.split('/images/')[1]
@@ -88,7 +88,7 @@ exports.likePost = (req, res, next) => {
   const user = decodedToken.userId;
   const postId = req.params.id;
   const like = req.body.likes;
-  if (like == 1){
+  if (like === 1){
     Like.findOrCreate({ where : { idPost: postId, idUser: user } })
     .then (([like, isNotPresent])=> {
       if(isNotPresent) {
@@ -108,12 +108,21 @@ exports.likePost = (req, res, next) => {
   }else {
     Post.findOne({ where: { id: postId } })//On sélectionne le post par son id
     .then((post) => {
-      Like.destroy ( { where: { idUser: user, idPost:postId } }),
+      Like.findOne ({ where: { idUser: user, idPost: postId } })
+      .then ((likeRes)=>{
+        if(likeRes !== null) {
+          Like.destroy ( { where: { idUser: user, idPost:postId } }),
             post.update({
-                likes: post.likes - 1,//on retire 1 à likes
+              likes: post.likes - 1,//on retire 1 à likes
             }, { id: req.params.id })
-                .then(() => res.status(200).json({message: 'Vote réinitialisé !'}))
-                .catch(error => res.status(400).json({error}))
+              .then(() => res.status(200).json({message: 'Vote réinitialisé !'}))
+              .catch(error => res.status(400).json({error}))
+        } else {
+          throw {message: 'Vous avez déjà réinitialisé votre vote !'};
+        }
+      })
+      .catch(error => res.status(400).json({ error }));
+
     })
     .catch(error => res.status(400).json({ error }));
   }
