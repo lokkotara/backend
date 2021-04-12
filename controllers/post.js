@@ -164,7 +164,7 @@ exports.modifyCommentPost = (req, res, next) => {
   Comment.findOne({ where: { id: id } })
     .then(comment => {
       if(comment.idUser == userId) {
-        comment.update( { ...req.body, id: req.params.id} )
+        comment.update( { ...req.body, id: id} )
         .then(() => res.status(200).json({ message: 'Votre commentaire est modifié !' }))
         .catch(error => res.status(400).json({ error }));
       }else {
@@ -177,6 +177,7 @@ exports.modifyCommentPost = (req, res, next) => {
 //Supprimer un commentaire
 exports.deleteCommentPost = (req, res, next) => {
   const id = req.params.id;
+  const idPost = req.params.idPost;
   const token = req.headers.authorization.split(' ')[1];//On extrait le token de la requête
   const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);//On décrypte le token grâce à la clé secrète
   const userId = decodedToken.userId;//On récupère l'userId du token décrypté
@@ -185,11 +186,11 @@ exports.deleteCommentPost = (req, res, next) => {
     .then(comment => {
       if(comment.idUser == userId || isAdmin == true) {
         comment.destroy({ where: { id: id } }),
-        Post.findOne({ where: { id: comment.idPost } })//On sélectionne le post par son id
+        Post.findOne({ where: { id: idPost } })//On sélectionne le post par son id
           .then((post) => {
             post.update({
-              comments: post.comments -1,//on ajoute 1 au comments
-            }, { id: comment.idPost })
+              comments: post.comments -1,//on retire 1 au comments
+            }, { id: idPost })
           .then(() => res.status(200).json({  message: 'commentaire supprimé !' }))
           .catch(error => res.status(400).json({ error }));
         })

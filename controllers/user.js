@@ -93,7 +93,7 @@ exports.modifyUser = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];//On extrait le token de la requête
   const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);//On décrypte le token grâce à la clé secrète
   const userId = decodedToken.userId;//On récupère l'userId du token décrypté
-  if(id == userId) {
+  if(id === userId) {
     User.findOne({ where: { id: id } })
       .then(user => {
         //Si une nouvelle image est reçue dans la requête
@@ -109,6 +109,7 @@ exports.modifyUser = (req, res, next) => {
           }
           req.body.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
         }
+        delete(req.body.isAdmin);
         user.update( { ...req.body, id: req.params.id} )
         .then(() => res.status(200).json({ message: 'Votre profil est modifié !' }))
         .catch(error => res.status(400).json({ error }));
