@@ -44,7 +44,8 @@ exports.signup = (req, res, next) => {
         User.create({
           username:req.body.username,
           email: mask(req.body.email),//L'adresse mail cryptée
-          password: hash//le mot de passe crypté
+          password: hash,//le mot de passe crypté
+          image: req.body.image
         })
           .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
           .catch(error => res.status(400).json({ error }));

@@ -22,7 +22,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
 app.use('/api/auth', userRoutes);//Sert les routes concernant les utilisateurs pour toutes demande vers le endpoint /api/auth
-app.use('/api/post', postRoutes);//Sert les routes concernant les utilisateurs pour toutes demande vers le endpoint /api/auth
+app.use('/api/feed', postRoutes);//Sert les routes concernant les utilisateurs pour toutes demande vers le endpoint /api/auth
 
 
 module.exports = app;
