@@ -1,8 +1,11 @@
-const Post = require('../models/post'); //On importe le modèle de sauce
-const Comment = require('../models/comment'); //On importe le modèle de sauce
-const Like = require('../models/like'); //On importe le modèle de sauce
-const fs = require('fs'); //système de gestion de fichier de Node
+// const db = require('../models');
+const Post = require('../models/post'); //On importe le modèle de post
+const User = require('../models/user'); //On importe le modèle de user
+const Comment = require('../models/comment'); //On importe le modèle de comment
+const Like = require('../models/like'); //On importe le modèle de like
+// const fs = require('fs'); //système de gestion de fichier de Node
 const jwt = require('jsonwebtoken');
+// const { database } = require('../models/connexion');
 
 
 // Créer un post
@@ -130,17 +133,24 @@ exports.likePost = (req, res, next) => {
 
 //Afficher un post
 exports.getOnePost = (req, res, next) => {
-  Post.findOne({ _id: req.params.id })//On récupère le post correspondant à l'id
+  Post.findOne({ id: req.params.id })//On récupère le post correspondant à l'id
   .then(post => res.status(200).json(post))
   .catch(error => res.status(404).json({ error }));
 };
 
 //Afficher tous les posts
 exports.getAllPosts = (req, res, next) => {
-  Post.findAll()//On récupère tous les posts de la table
+  Post.findAll({include: User})//On récupère tous les posts de la table
   .then(posts => res.status(200).json(posts))
   .catch(error => res.status(400).json({ error }));
 };
+
+// //Afficher tous les posts
+// exports.getAllPostsAndComments = (req, res, next) => {
+//   Comment.findAll()//On récupère tous les posts de la table
+//   .then(comments => res.status(200).json(comments))
+//   .catch(error => res.status(400).json({ error }));
+// };
 
 //Commenter un post
 exports.commentPost = (req, res, next) => {

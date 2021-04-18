@@ -14,6 +14,7 @@ router.patch('/:idPost/comment/:id', auth, postCtrl.modifyCommentPost);//Permet 
 router.delete('/:idPost/comment/:id', auth, postCtrl.deleteCommentPost);//Permet de commenter le post
 router.get('/:id', auth, postCtrl.getOnePost);//Récupère un seul post
 router.get('/', auth, postCtrl.getAllPosts);//Récupère tous les posts
+// router.get('/getAll', auth, postCtrl.getAllPostsAndComments);//Récupère tous les posts
 
 module.exports = router;
 

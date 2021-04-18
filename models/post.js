@@ -16,7 +16,7 @@ const Post= database.define('Post', {
             associate: function(models) {
                 models.Post.belongsTo(models.User, {
                     foreignKey: {
-                        allowNull:false,
+                        allowNull: false,
                     },
                     constraints: true,
                     onDelete:'CASCADE',
@@ -24,9 +24,10 @@ const Post= database.define('Post', {
                 }),
                 models.Post.hasMany(models.Comment);
                 models.Post.hasMany(models.Like);
-
             }
         }
     });
 
- module.exports = Post;
+module.exports = Post;
+
+// Post.sync({ alter: true });
