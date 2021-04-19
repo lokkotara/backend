@@ -140,7 +140,8 @@ exports.getOnePost = (req, res, next) => {
 
 //Afficher tous les posts
 exports.getAllPosts = (req, res, next) => {
-  Post.findAll({include: User})//On récupère tous les posts de la table
+  Post.findAll()//On récupère tous les posts de la table
+  // Post.findAll({include: User})//On récupère tous les posts de la table
   .then(posts => res.status(200).json(posts))
   .catch(error => res.status(400).json({ error }));
 };
