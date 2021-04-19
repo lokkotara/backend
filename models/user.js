@@ -4,10 +4,12 @@ const {Sequelize,DataTypes, database} = require('./connexion');
 const User = database.define('User', {
     username: {
         type: DataTypes.STRING,
+        required: true,
         unique: true
     },
     email: {
         type: DataTypes.STRING,
+        required: true,
         unique: true
     },
     password: DataTypes.STRING,
@@ -22,14 +24,6 @@ const User = database.define('User', {
     modelName: 'User',
     underscored: false,
     paranoid: false
-}, {
-    classMethods: {
-        associate: function(models) {
-            models.User.hasMany(models.Post);
-            models.User.hasMany(models.Comment);
-            models.User.hasMany(models.Like);
-        }
-    }
 });
 
 module.exports = User;

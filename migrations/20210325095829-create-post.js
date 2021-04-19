@@ -8,16 +8,17 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      idUser: {
+      userId: {
         allowNull: false,
+        onDelete: 'CASCADE',
         type: Sequelize.INTEGER,
         references: {
           model: 'Users',
           key: 'id',
         },
-        constraints: true,
-        onDelete: 'CASCADE',
-        hooks: true
+        // constraints: true,
+        // onDelete: 'CASCADE',
+        // hooks: true
       },
       content: {
         allowNull: false,

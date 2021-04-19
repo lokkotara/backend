@@ -1,8 +1,9 @@
 // const db = require('../models');
-const Post = require('../models/post'); //On importe le modèle de post
-const User = require('../models/user'); //On importe le modèle de user
-const Comment = require('../models/comment'); //On importe le modèle de comment
-const Like = require('../models/like'); //On importe le modèle de like
+const {User, Post, Comment, Like} = require('../models/index');
+// const Post = require('../models/post'); //On importe le modèle de post
+// const User = require('../models/user'); //On importe le modèle de user
+// const Comment = require('../models/comment'); //On importe le modèle de comment
+// const Like = require('../models/like'); //On importe le modèle de like
 // const fs = require('fs'); //système de gestion de fichier de Node
 const jwt = require('jsonwebtoken');
 // const { database } = require('../models/connexion');
@@ -14,7 +15,7 @@ exports.createPost = (req, res, next) => {
   const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
   const userId = decodedToken.userId;  
   Post.create ({
-    idUser: userId,
+    userId: userId,
     // image: (req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null),//On génère l'url grâce à son nom de fichier
     content: req.body.content,
     likes: 0,
@@ -92,7 +93,7 @@ exports.likePost = (req, res, next) => {
   const postId = req.params.id;
   const like = req.body.likes;
   if (like === 1){
-    Like.findOrCreate({ where : { idPost: postId, idUser: user } })
+    Like.findOrCreate({ where : { postId: postId, userId: user } })
     .then (([like, isNotPresent])=> {
       if(isNotPresent) {
         Post.findOne({ where: { id: postId } })//On sélectionne le post par son id
@@ -140,10 +141,17 @@ exports.getOnePost = (req, res, next) => {
 
 //Afficher tous les posts
 exports.getAllPosts = (req, res, next) => {
-  Post.findAll()//On récupère tous les posts de la table
-  // Post.findAll({include: User})//On récupère tous les posts de la table
+  Post.findAll({
+    include: [{
+      model: User
+    }]
+      // {model: Comment}
+  })
   .then(posts => res.status(200).json(posts))
-  .catch(error => res.status(400).json({ error }));
+  .catch(error => {
+    console.log(error);
+    res.status(400).json({ error });
+  })
 };
 
 // //Afficher tous les posts
