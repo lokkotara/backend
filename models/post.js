@@ -17,10 +17,7 @@ const Post= database.define('Post', {
                 models.Post.belongsTo(models.User, {
                     foreignKey: {
                         allowNull: false,
-                    },
-                    constraints: true,
-                    onDelete:'CASCADE',
-                    hooks: true
+                    }
                 }),
                 models.Post.hasMany(models.Comment);
                 models.Post.hasMany(models.Like);
