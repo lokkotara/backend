@@ -35,7 +35,7 @@ const Like = require('../models/like');
 
 // User.hasMany(Post);
 Post.belongsTo(User);   
-// User.hasMany(Comment, { onDelete: 'cascade' });
+Post.hasMany(Comment, { onDelete: 'cascade' });
 Comment.belongsTo(Post);
 Comment.belongsTo(User);
 

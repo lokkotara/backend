@@ -15,7 +15,7 @@ exports.createPost = (req, res, next) => {
   const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
   const userId = decodedToken.userId;  
   Post.create ({
-    userId: userId,
+    UserId: userId,
     // image: (req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null),//On génère l'url grâce à son nom de fichier
     content: req.body.content,
     likes: 0,
@@ -33,7 +33,7 @@ exports.modifyPost = (req, res, next) => {
   const userId = decodedToken.userId;//On récupère l'userId du token décrypté
   Post.findOne({ where: { id: id } })
     .then(post => {
-      if(post.idUser === userId) {
+      if(post.UserId === userId) {
         // if (req.file) {
         //   if (post.image !== null){
         //     const fileName = post.image.split('/images/')[1]
@@ -65,7 +65,7 @@ exports.deletePost = (req, res, next) => {
   const isAdmin = decodedToken.isAdmin;//On récupère l'userId du token décrypté
   Post.findOne({ where: { id: id } })
     .then(post => {
-      if(post.idUser == userId || isAdmin == true) {
+      if(post.UserId == userId || isAdmin == true) {
         // if (post.image !== null){
         //   const fileName = post.image.split('/images/')[1]
         //   fs.unlink(`images/${fileName}`, (err => {//On supprime l'ancienne image
@@ -144,6 +144,8 @@ exports.getAllPosts = (req, res, next) => {
   Post.findAll({
     include: [{
       model: User
+    }, {
+      model: Comment
     }]
       // {model: Comment}
   })
@@ -154,13 +156,6 @@ exports.getAllPosts = (req, res, next) => {
   })
 };
 
-// //Afficher tous les posts
-// exports.getAllPostsAndComments = (req, res, next) => {
-//   Comment.findAll()//On récupère tous les posts de la table
-//   .then(comments => res.status(200).json(comments))
-//   .catch(error => res.status(400).json({ error }));
-// };
-
 //Commenter un post
 exports.commentPost = (req, res, next) => {
   const token = req.headers.authorization.split(' ')[1];
@@ -168,8 +163,8 @@ exports.commentPost = (req, res, next) => {
   const user = decodedToken.userId;
   const postId = req.params.id;
   Comment.create ({
-    idUser: user,
-    idPost: postId,
+    UserId: user,
+    PostId: postId,
     content: req.body.content
   }),
   Post.findOne({ where: { id: postId } })//On sélectionne le post par son id
@@ -191,7 +186,7 @@ exports.modifyCommentPost = (req, res, next) => {
   const userId = decodedToken.userId;//On récupère l'userId du token décrypté
   Comment.findOne({ where: { id: id } })
     .then(comment => {
-      if(comment.idUser == userId) {
+      if(comment.userId == userId) {
         comment.update( { ...req.body, id: id} )
         .then(() => res.status(200).json({ message: 'Votre commentaire est modifié !' }))
         .catch(error => res.status(400).json({ error }));
@@ -212,7 +207,7 @@ exports.deleteCommentPost = (req, res, next) => {
   const isAdmin = decodedToken.isAdmin;//On récupère l'userId du token décrypté
   Comment.findOne({ where: { id: id } })
     .then(comment => {
-      if(comment.idUser == userId || isAdmin == true) {
+      if(comment.userId == userId || isAdmin == true) {
         comment.destroy({ where: { id: id } }),
         Post.findOne({ where: { id: idPost } })//On sélectionne le post par son id
           .then((post) => {

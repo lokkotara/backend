@@ -2,14 +2,14 @@
 const {Sequelize,DataTypes, database} = require('./connexion');
 
 const Comment= database.define('Comment', {
-        postId: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'Post',
-                key: 'id',
-            },
-        },
-        userId: DataTypes.INTEGER,
+        // postId: {
+        //     type: DataTypes.INTEGER,
+        //     references: {
+        //         model: 'Post',
+        //         key: 'id',
+        //     },
+        // },
+        // userId: DataTypes.INTEGER,
         content: DataTypes.STRING,
     }, {
         Sequelize,

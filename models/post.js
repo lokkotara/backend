@@ -2,13 +2,13 @@
 const {Sequelize,DataTypes, database} = require('./connexion');
 
 const Post= database.define('Post', {
-        userId: {
-            type: DataTypes.INTEGER,
-            references: {
-                model: 'User',
-                key: 'id',
-            },
-        },
+        // userId: {
+        //     type: DataTypes.INTEGER,
+        //     references: {
+        //         model: 'User',
+        //         key: 'id',
+        //     },
+        // },
         content: DataTypes.STRING,
         likes: DataTypes.INTEGER,
         comments: DataTypes.INTEGER,
@@ -20,5 +20,3 @@ const Post= database.define('Post', {
     });
 
 module.exports = Post;
-
-// Post.sync({ alter: true });
