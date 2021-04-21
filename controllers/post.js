@@ -6,8 +6,6 @@ const {User, Post, Comment, Like} = require('../models/index');
 // const Like = require('../models/like'); //On importe le modèle de like
 // const fs = require('fs'); //système de gestion de fichier de Node
 const jwt = require('jsonwebtoken');
-// const { database } = require('../models/connexion');
-
 
 // Créer un post
 exports.createPost = (req, res, next) => {

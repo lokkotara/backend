@@ -8,7 +8,8 @@ const multer = require('../middleware/multer-config');//et celui pour la gestion
 router.post('/signup', userCtrl.signup);//Permet de créer un nouvel utilisateur
 router.post('/login', userCtrl.login);//Connecte un utilisateur existant
 
-router.get("/profil/:id", /*auth, */userCtrl.getOneUser);
+router.get("/profil/:id", auth, userCtrl.getOneUser);
+// router.get("/profil/:id", auth, userCtrl.getProfileUser);
 router.patch("/profil/:id", auth, multer, userCtrl.modifyUser);
 router.delete("/profil/:id", auth, userCtrl.deleteUser);
 

@@ -2,7 +2,8 @@ const bcrypt =require('bcrypt');//Sert à hasher et saler les mots de passe
 const jwt = require('jsonwebtoken');//Permet de créer un token utilisateur
 const fs = require('fs'); //système de gestion de fichier de Node
 
-const User =require('../models/User');
+const {User} = require('../models/index');
+// const User =require('../models/User');
 
 const passwordValidator = require('password-validator');
 const schema = new passwordValidator();//On crée un schema pour obtenir des mots de passe plus sécurisés
