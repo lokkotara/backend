@@ -145,7 +145,6 @@ exports.getAllPosts = (req, res, next) => {
     }, {
       model: Comment
     }]
-      // {model: Comment}
   })
   .then(posts => res.status(200).json(posts))
   .catch(error => {
