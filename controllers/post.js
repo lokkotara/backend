@@ -144,7 +144,10 @@ exports.getAllPosts = (req, res, next) => {
       model: User
     }, {
       model: Comment
-    }]
+    }],
+    order: [[
+      "createdAt", "DESC"
+    ]]
   })
   .then(posts => res.status(200).json(posts))
   .catch(error => {
