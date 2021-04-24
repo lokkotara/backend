@@ -17,6 +17,8 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use('/images', express.static(path.join(__dirname,'images')));
+
 //Permet de récupérer le corps de la requête au format json
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
