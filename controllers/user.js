@@ -65,16 +65,21 @@ exports.login = (req, res, next) => {
         .then(valid => {
           if (!valid) {
             return res.status(401).json({ error: 'Mot de passe incorrect !' });
+          } else {
+            if (user.username === req.body.username) {
+              res.status(200).json({
+                userId: user.id,
+                isAdmin: user.isAdmin,
+                token: jwt.sign(//On attribue un token d'authentification
+                  { userId: user.id, isAdmin: user.isAdmin },
+                  process.env.JWT_SECRET_KEY,
+                  { expiresIn: '24h' }
+                )
+              });
+            } else {
+              res.status(400).json({ error: 'Le nom d\'utilisateur est incorrect !' });
+            }
           }
-          res.status(200).json({
-            userId: user.id,
-            isAdmin: user.isAdmin,
-            token: jwt.sign(//On attribue un token d'authentification
-              { userId: user.id, isAdmin: user.isAdmin },
-              process.env.JWT_SECRET_KEY,
-              { expiresIn: '24h' }
-            )
-          });
         })
         .catch(error => res.status(500).json({ error }));
     })
