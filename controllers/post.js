@@ -110,10 +110,10 @@ exports.likePost = (req, res, next) => {
   }else {
     Post.findOne({ where: { id: postId } })//On sélectionne le post par son id
     .then((post) => {
-      Like.findOne ({ where: { idUser: user, idPost: postId } })
+      Like.findOne ({ where: { userId: user, postId: postId } })
       .then ((likeRes)=>{
         if(likeRes !== null) {
-          Like.destroy ( { where: { idUser: user, idPost:postId } }),
+          Like.destroy ( { where: { userId: user, postId:postId } }),
             post.update({
               likes: post.likes - 1,//on retire 1 à likes
             }, { id: req.params.id })
@@ -128,6 +128,16 @@ exports.likePost = (req, res, next) => {
     })
     .catch(error => res.status(400).json({ error }));
   }
+};
+
+//Afficher un post
+exports.getLike = (req, res, next) => {
+  const token = req.headers.authorization.split(' ')[1];
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+  const user = decodedToken.userId;
+  Like.findAll({ where: { postId: req.params.id } })//On récupère le post correspondant à l'id
+  .then(post => res.status(200).json(post))
+  .catch(error => res.status(404).json({ error }));
 };
 
 //Afficher un post
