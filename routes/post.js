@@ -8,8 +8,11 @@ const multer = require('../middleware/multer-config');//et celui pour la gestion
 router.post('/', auth, multer, postCtrl.createPost);//Permet de créer un post
 router.patch('/:id', auth, multer, postCtrl.modifyPost);//Permet de modifier un post existant
 router.delete('/:id', auth, postCtrl.deletePost);//Supprime un post
+
 router.post('/:id/like', auth, postCtrl.likePost);//Permet de liker le post
-router.get('/:id/like', auth, postCtrl.getLike);//Permet de liker le post
+router.get('/:id/like', auth, postCtrl.getLike);//Permet de récupérer les likes
+
+router.get('/:id/comment', auth, postCtrl.getComments);//Permet de récupérer les likes
 router.post('/:id/comment', auth, postCtrl.commentPost);//Permet de commenter le post
 router.patch('/:idPost/comment/:id', auth, postCtrl.modifyCommentPost);//Permet de commenter le post
 router.delete('/:idPost/comment/:id', auth, postCtrl.deleteCommentPost);//Permet de commenter le post

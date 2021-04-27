@@ -132,11 +132,15 @@ exports.likePost = (req, res, next) => {
 
 //Afficher un post
 exports.getLike = (req, res, next) => {
-  const token = req.headers.authorization.split(' ')[1];
-  const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
-  const user = decodedToken.userId;
   Like.findAll({ where: { postId: req.params.id } })//On récupère le post correspondant à l'id
-  .then(post => res.status(200).json(post))
+  .then(like => res.status(200).json(like))
+  .catch(error => res.status(404).json({ error }));
+};
+
+//Afficher un post
+exports.getComments = (req, res, next) => {
+  Comment.findAll({ where: { postId: req.params.id } })//On récupère le post correspondant à l'id
+  .then(comment => res.status(200).json(comment))
   .catch(error => res.status(404).json({ error }));
 };
 
@@ -172,20 +176,26 @@ exports.commentPost = (req, res, next) => {
   const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
   const user = decodedToken.userId;
   const postId = req.params.id;
-  Comment.create ({
-    UserId: user,
-    PostId: postId,
-    content: req.body.content
-  }),
-  Post.findOne({ where: { id: postId } })//On sélectionne le post par son id
-    .then((post) => {
-      post.update({
-        comments: post.comments +1,//on ajoute 1 au comments
-      }, { id: postId })
-      .then(() => res.status(200).json({message: 'Nouveau commentaire envoyé !'}))
-      .catch(error => res.status(400).json({error}))
-    })
-    .catch(error => res.status(400).json({ error }));
+  const content = req.body.content;
+  console.log(content);
+  if (content !== null) {
+    Comment.create ({
+      UserId: user,
+      PostId: postId,
+      content: req.body.content
+    }),
+    Post.findOne({ where: { id: postId } })//On sélectionne le post par son id
+      .then((post) => {
+        post.update({
+          comments: post.comments +1,//on ajoute 1 au comments
+        }, { id: postId })
+        .then(() => res.status(200).json({message: 'Nouveau commentaire envoyé !'}))
+        .catch(error => res.status(400).json({error}))
+      })
+      .catch(error => res.status(400).json({ error }));
+  } else {
+    console.error(error);
+  }
 };
 
 //Modifier un commentaire
