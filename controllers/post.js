@@ -1,9 +1,4 @@
-// const db = require('../models');
 const {User, Post, Comment, Like} = require('../models/index');
-// const Post = require('../models/post'); //On importe le modèle de post
-// const User = require('../models/user'); //On importe le modèle de user
-// const Comment = require('../models/comment'); //On importe le modèle de comment
-// const Like = require('../models/like'); //On importe le modèle de like
 // const fs = require('fs'); //système de gestion de fichier de Node
 const jwt = require('jsonwebtoken');
 
@@ -139,9 +134,6 @@ exports.getLike = (req, res, next) => {
 
 //Afficher un post
 exports.isLiked = (req, res, next) => {
-  // const token = req.headers.authorization.split(' ')[1];
-  // const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
-  // const user = decodedToken.userId;
   Like.findOne({ where: { postId: req.params.idPost, userId: req.params.id } })//On récupère le post correspondant à l'id
   .then(like => res.status(200).json(like))
   .catch(error => res.status(404).json({ error }));
@@ -149,7 +141,12 @@ exports.isLiked = (req, res, next) => {
 
 //Afficher un post
 exports.getComments = (req, res, next) => {
-  Comment.findAll({ where: { postId: req.params.id } })//On récupère le post correspondant à l'id
+  Comment.findAll({
+    where: { postId: req.params.id },
+    include: [{
+      model: User
+    }]
+  })//On récupère le post correspondant à l'id
   .then(comment => res.status(200).json(comment))
   .catch(error => res.status(404).json({ error }));
 };

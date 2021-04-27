@@ -47,6 +47,4 @@ async function loadModel() {
     await User.sequelize.query('SET FOREIGN_KEY_CHECKS = 1', null)
 };
 
-// loadModel();
-
 module.exports = {User, Post, Comment, Like};
