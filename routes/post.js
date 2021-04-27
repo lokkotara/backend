@@ -11,6 +11,7 @@ router.delete('/:id', auth, postCtrl.deletePost);//Supprime un post
 
 router.post('/:id/like', auth, postCtrl.likePost);//Permet de liker le post
 router.get('/:id/like', auth, postCtrl.getLike);//Permet de récupérer les likes
+router.get('/:idPost/like/:id', auth, postCtrl.isLiked);//Permet de récupérer les likes
 
 router.get('/:id/comment', auth, postCtrl.getComments);//Permet de récupérer les likes
 router.post('/:id/comment', auth, postCtrl.commentPost);//Permet de commenter le post

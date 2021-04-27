@@ -138,6 +138,16 @@ exports.getLike = (req, res, next) => {
 };
 
 //Afficher un post
+exports.isLiked = (req, res, next) => {
+  // const token = req.headers.authorization.split(' ')[1];
+  // const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+  // const user = decodedToken.userId;
+  Like.findOne({ where: { postId: req.params.idPost, userId: req.params.id } })//On récupère le post correspondant à l'id
+  .then(like => res.status(200).json(like))
+  .catch(error => res.status(404).json({ error }));
+};
+
+//Afficher un post
 exports.getComments = (req, res, next) => {
   Comment.findAll({ where: { postId: req.params.id } })//On récupère le post correspondant à l'id
   .then(comment => res.status(200).json(comment))
