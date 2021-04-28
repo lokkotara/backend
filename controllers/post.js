@@ -164,7 +164,10 @@ exports.getAllPosts = (req, res, next) => {
     include: [{
       model: User
     }, {
-      model: Comment
+      model: Comment,
+      include: [{
+        model: User
+      }],
     }],
     order: [[
       "createdAt", "DESC"
