@@ -16,13 +16,14 @@ module.exports = {
           model: 'Users',
           key: 'id',
         },
-        // constraints: true,
-        // onDelete: 'CASCADE',
-        // hooks: true
       },
       content: {
         allowNull: false,
         type: Sequelize.TEXT
+      },
+      image: {
+        allowNull: true,
+        type: Sequelize.STRING
       },
       likes: {
         allowNull: true,

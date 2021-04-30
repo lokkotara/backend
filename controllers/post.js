@@ -1,5 +1,5 @@
 const {User, Post, Comment, Like} = require('../models/index');
-// const fs = require('fs'); //système de gestion de fichier de Node
+const fs = require('fs'); //système de gestion de fichier de Node
 const jwt = require('jsonwebtoken');
 
 // Créer un post
@@ -9,7 +9,7 @@ exports.createPost = (req, res, next) => {
   const userId = decodedToken.userId;  
   Post.create ({
     UserId: userId,
-    // image: (req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null),//On génère l'url grâce à son nom de fichier
+    image: (req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null),//On génère l'url grâce à son nom de fichier
     content: req.body.content,
     likes: 0,
     comments:0
@@ -27,18 +27,18 @@ exports.modifyPost = (req, res, next) => {
   Post.findOne({ where: { id: id } })
     .then(post => {
       if(post.UserId === userId) {
-        // if (req.file) {
-        //   if (post.image !== null){
-        //     const fileName = post.image.split('/images/')[1]
-        //     fs.unlink(`images/${fileName}`, (err => {//On supprime l'ancienne image
-        //       if (err) console.log(err);
-        //       else {
-        //           console.log("Image supprimée: " + fileName);
-        //       }
-        //     }))
-        //   }
-        //   req.body.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-        // }
+        if (req.file) {
+          if (post.image !== null){
+            const fileName = post.image.split('/images/')[1]
+            fs.unlink(`images/${fileName}`, (err => {//On supprime l'ancienne image
+              if (err) console.log(err);
+              else {
+                  console.log("Image supprimée: " + fileName);
+              }
+            }))
+          }
+          req.body.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+        }
         post.update( { ...req.body, id: req.params.id} )
         .then(() => res.status(200).json({ message: 'Votre post est modifié !' }))
         .catch(error => res.status(400).json({ error }));
@@ -59,15 +59,15 @@ exports.deletePost = (req, res, next) => {
   Post.findOne({ where: { id: id } })
     .then(post => {
       if(post.UserId == userId || isAdmin == true) {
-        // if (post.image !== null){
-        //   const fileName = post.image.split('/images/')[1]
-        //   fs.unlink(`images/${fileName}`, (err => {//On supprime l'ancienne image
-        //     if (err) console.log(err);
-        //     else {
-        //       console.log("Image supprimée: " + fileName);
-        //     }
-        //   }))
-        // }
+        if (post.image !== null){
+          const fileName = post.image.split('/images/')[1]
+          fs.unlink(`images/${fileName}`, (err => {//On supprime l'ancienne image
+            if (err) console.log(err);
+            else {
+              console.log("Image supprimée: " + fileName);
+            }
+          }))
+        }
         post.destroy({ where: { id: id } })
           .then(() => res.status(200).json({  message: 'post supprimé !' }))
           .catch(error => res.status(400).json({ error }));

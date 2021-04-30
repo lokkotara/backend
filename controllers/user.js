@@ -44,7 +44,7 @@ exports.signup = (req, res, next) => {
       .then(hash => {
         User.create({
           username:req.body.username,
-          email: mask(req.body.email),//L'adresse mail cryptée
+          email: req.body.email,//L'adresse mail cryptée
           password: hash//le mot de passe crypté
         })
           .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
@@ -55,7 +55,7 @@ exports.signup = (req, res, next) => {
 
 //Connecte un utlisateur existant
 exports.login = (req, res, next) => {
-  const email = mask(req.body.email);
+  const email = req.body.email;
   User.findOne({ where:{ email }})//On cherche l'email correspondant dans la collection 
     .then(user => {
       if (!user) {
