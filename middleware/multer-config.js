@@ -3,6 +3,7 @@ const multer = require('multer');
 //Indique comment nous voulons écrire les types de médias
 const MIME_TYPES = {
   'image/jpg': 'jpg',
+  'image/webp': 'webp',
   'image/jpeg': 'jpg',
   'image/png': 'png',
   'image/gif': 'gif'

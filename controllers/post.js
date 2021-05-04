@@ -125,21 +125,21 @@ exports.likePost = (req, res, next) => {
   }
 };
 
-//Afficher un post
+//Afficher tous les likes d'un post
 exports.getLike = (req, res, next) => {
   Like.findAll({ where: { postId: req.params.id } })//On récupère le post correspondant à l'id
   .then(like => res.status(200).json(like))
   .catch(error => res.status(404).json({ error }));
 };
 
-//Afficher un post
+//Renvoit le like si un utilisateur aime un post
 exports.isLiked = (req, res, next) => {
   Like.findOne({ where: { postId: req.params.idPost, userId: req.params.id } })//On récupère le post correspondant à l'id
   .then(like => res.status(200).json(like))
   .catch(error => res.status(404).json({ error }));
 };
 
-//Afficher un post
+//Afficher tous les commentaires d'un post
 exports.getComments = (req, res, next) => {
   Comment.findAll({
     where: { postId: req.params.id },
@@ -237,7 +237,8 @@ exports.deleteCommentPost = (req, res, next) => {
   const isAdmin = decodedToken.isAdmin;//On récupère l'userId du token décrypté
   Comment.findOne({ where: { id: id } })
     .then(comment => {
-      if(comment.userId == userId || isAdmin == true) {
+      console.log(comment);
+      if(comment.UserId == userId || isAdmin == true) {
         comment.destroy({ where: { id: id } }),
         Post.findOne({ where: { id: idPost } })//On sélectionne le post par son id
           .then((post) => {
