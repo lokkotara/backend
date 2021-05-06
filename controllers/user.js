@@ -115,6 +115,11 @@ exports.modifyUser = (req, res, next) => {
           }
           req.body.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
         }
+        if (req.body.password) {
+          bcrypt.hash(req.body.password, 10).then((hash) => {
+            req.body.password = hash;
+          });
+        }
         delete(req.body.isAdmin);
         user.update( { ...req.body, id: req.params.id} )
         .then(() => res.status(200).json({ message: 'Votre profil est modifié !' }))
