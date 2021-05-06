@@ -115,15 +115,37 @@ exports.modifyUser = (req, res, next) => {
           }
           req.body.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
         }
-        if (req.body.password) {
-          bcrypt.hash(req.body.password, 10).then((hash) => {
-            req.body.password = hash;
-          });
-        }
         delete(req.body.isAdmin);
-        user.update( { ...req.body, id: req.params.id} )
+        user.update( {...req.body, id: req.params.id} )
         .then(() => res.status(200).json({ message: 'Votre profil est modifié !' }))
         .catch(error => res.status(400).json({ error }));
+      })
+      .catch(error => res.status(500).json({ error }));
+  }else {
+    return res.status(401).json({ error: "vous n'avez pas l'autorisation nécessaire !" });
+  }
+};
+
+//Modifier un mdp utilisateur
+exports.modifyPassword = (req, res, next) => {
+  const id = JSON.parse(req.params.id)
+  const token = req.headers.authorization.split(' ')[1];//On extrait le token de la requête
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);//On décrypte le token grâce à la clé secrète
+  const userId = decodedToken.userId;//On récupère l'userId du token décrypté
+  const password = req.body.password;
+  if(id === userId) {
+    User.findOne({ where: { id: id } })
+      .then(user => {
+          bcrypt.hash(req.body.password, 10)
+            .then((hash) => {
+              user.update({
+                password: hash,
+                id: req.params.id
+              })
+                .then(() => res.status(200).json({ message: 'Votre mot de passe est modifié !' }))
+                .catch(error => res.status(400).json({ error }));
+            })
+            .catch(error => res.status(500).json({ error }));
       })
       .catch(error => res.status(500).json({ error }));
   }else {

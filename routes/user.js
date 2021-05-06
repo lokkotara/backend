@@ -10,6 +10,7 @@ router.post('/login', userCtrl.login);//Connecte un utilisateur existant
 
 router.get("/profil/:id", auth, multer, userCtrl.getOneUser);
 router.patch("/profil/:id", auth, multer, userCtrl.modifyUser);
+router.patch("/profil/:id/password", auth, multer, userCtrl.modifyPassword);
 router.delete("/profil/:id", auth, userCtrl.deleteUser);
 
 module.exports = router;
