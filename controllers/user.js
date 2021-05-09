@@ -100,6 +100,15 @@ exports.getOneUser = (req, res, next) => {
     .catch((error) => res.status(404).json({ error }));
 };
 
+//Obtenir les infos sur tous les utilisateurs
+exports.getAllUsers = (req, res, next) => {
+  User.findAll({ order: [[
+    "username", "ASC"
+  ]]})
+    .then((user) => res.status(200).json(user))
+    .catch((error) => res.status(404).json({ error }));
+};
+
 //Modifier un utilisateur
 exports.modifyUser = (req, res, next) => {
   const id = JSON.parse(req.params.id)

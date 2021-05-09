@@ -208,25 +208,6 @@ exports.commentPost = (req, res, next) => {
   }
 };
 
-//Modifier un commentaire
-// exports.modifyCommentPost = (req, res, next) => {
-//   const id = req.params.id;
-//   const token = req.headers.authorization.split(' ')[1];//On extrait le token de la requête
-//   const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);//On décrypte le token grâce à la clé secrète
-//   const userId = decodedToken.userId;//On récupère l'userId du token décrypté
-//   Comment.findOne({ where: { id: id } })
-//     .then(comment => {
-//       if(comment.userId == userId) {
-//         comment.update( { ...req.body, id: id} )
-//         .then(() => res.status(200).json({ message: 'Votre commentaire est modifié !' }))
-//         .catch(error => res.status(400).json({ error }));
-//       }else {
-//         return res.status(401).json({ error: "vous n'avez pas l'autorisation nécessaire !" });
-//       }
-//     })
-//     .catch(error => res.status(500).json({ error }));
-// };
-
 //Supprimer un commentaire
 exports.deleteCommentPost = (req, res, next) => {
   const id = req.params.id;

@@ -9,6 +9,7 @@ router.post('/signup', userCtrl.signup);//Permet de créer un nouvel utilisateur
 router.post('/login', userCtrl.login);//Connecte un utilisateur existant
 
 router.get("/profil/:id", auth, multer, userCtrl.getOneUser);
+router.get("/profil", auth, multer, userCtrl.getAllUsers);
 router.patch("/profil/:id", auth, multer, userCtrl.modifyUser);
 router.patch("/profil/:id/password", auth, multer, userCtrl.modifyPassword);
 router.delete("/profil/:id", auth, userCtrl.deleteUser);
