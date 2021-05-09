@@ -56,17 +56,24 @@ exports.signup = (req, res, next) => {
 //Connecte un utlisateur existant
 exports.login = (req, res, next) => {
   const email = req.body.email;
+  const username = req.body.username;
+  const password = req.body.password;
+  if (email.length === 0 || password.length === 0 || username.length === 0) {
+    return res
+      .status(400)
+      .json({ error: "Veuillez remplir tous les champs !" });
+  };
   User.findOne({ where:{ email }})//On cherche l'email correspondant dans la collection 
     .then(user => {
       if (!user) {
         return res.status(401).json({ error: 'Utilisateur non trouvé !' });
       }
-      bcrypt.compare(req.body.password, user.password)//on compare le mot de passe de la requête avec le hash de l'utilisateur
+      bcrypt.compare(password, user.password)//on compare le mot de passe de la requête avec le hash de l'utilisateur
         .then(valid => {
           if (!valid) {
             return res.status(401).json({ error: 'Mot de passe incorrect !' });
           } else {
-            if (user.username === req.body.username) {
+            if (user.username === username) {
               res.status(200).json({
                 userId: user.id,
                 isAdmin: user.isAdmin,
