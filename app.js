@@ -8,7 +8,6 @@ const postRoutes = require('./routes/post');//Importe le routeur pour les posts
 
 app.use(helmet());//Met en place les sous-plugins de helmet
 
-
 //définit les paramètres d'en-tête
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');//permet l'accès à l'API depuis n'importe quelle origine
@@ -24,7 +23,6 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
 app.use('/api/auth', userRoutes);//Sert les routes concernant les utilisateurs pour toutes demande vers le endpoint /api/auth
-app.use('/api/feed', postRoutes);//Sert les routes concernant les utilisateurs pour toutes demande vers le endpoint /api/auth
-
+app.use('/api/feed', postRoutes);//Sert les routes concernant les utilisateurs pour toutes demande vers le endpoint /api/feed
 
 module.exports = app;

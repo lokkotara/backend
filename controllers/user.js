@@ -14,26 +14,6 @@ schema
     .has().uppercase(1)     // min 1 caractère majuscule
     .has().lowercase(1)     // min 1 caractère minuscule
 
-//Permet de crypter l'adresse mail dans la bdd
-function mask(str, mask=true) {
-  const ref = str;
-  let arobase = false;
-  let newStr = "";
-  str = str.split("");
-  for (let i = 0, size = str.length; i < size; i++) {
-    if (str[i] === "@") {
-      arobase = true;
-      newStr += str[i];
-      continue;
-    }
-    if (str[i] === "." && arobase) {
-      return newStr+ref.slice(i);
-    }
-    if (mask) newStr += String.fromCharCode(str[i].charCodeAt() + 9);
-    else newStr += String.fromCharCode(str[i].charCodeAt() - 9);
-  }
-}
-
 //Enregistre un nouvel utilisateur
 exports.signup = (req, res, next) => {
   if (!schema.validate(req.body.password)) {//Renvoie une erreur si le schema de mot de passe n'est pas respecté

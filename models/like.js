@@ -12,5 +12,3 @@ const Like= database.define('Like', {
     });
 
 module.exports = Like;
-
-// Like.sync({ alter: true })

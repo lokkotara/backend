@@ -2,13 +2,6 @@
 const {Sequelize,DataTypes, database} = require('./connexion');
 
 const Post= database.define('Post', {
-        // userId: {
-        //     type: DataTypes.INTEGER,
-        //     references: {
-        //         model: 'User',
-        //         key: 'id',
-        //     },
-        // },
         content: DataTypes.STRING,
         image: DataTypes.STRING,
         likes: DataTypes.INTEGER,
