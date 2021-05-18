@@ -140,23 +140,23 @@ exports.isLiked = (req, res, next) => {
 };
 
 //Afficher tous les commentaires d'un post
-exports.getComments = (req, res, next) => {
-  Comment.findAll({
-    where: { postId: req.params.id },
-    include: [{
-      model: User
-    }]
-  })//On récupère le post correspondant à l'id
-  .then(comment => res.status(200).json(comment))
-  .catch(error => res.status(404).json({ error }));
-};
+// exports.getComments = (req, res, next) => {
+//   Comment.findAll({
+//     where: { postId: req.params.id },
+//     include: [{
+//       model: User
+//     }]
+//   })//On récupère le post correspondant à l'id
+//   .then(comment => res.status(200).json(comment))
+//   .catch(error => res.status(404).json({ error }));
+// };
 
 //Afficher un post
-exports.getOnePost = (req, res, next) => {
-  Post.findOne({ id: req.params.id })//On récupère le post correspondant à l'id
-  .then(post => res.status(200).json(post))
-  .catch(error => res.status(404).json({ error }));
-};
+// exports.getOnePost = (req, res, next) => {
+//   Post.findOne({ id: req.params.id })//On récupère le post correspondant à l'id
+//   .then(post => res.status(200).json(post))
+//   .catch(error => res.status(404).json({ error }));
+// };
 
 //Afficher tous les posts
 exports.getAllPosts = (req, res, next) => {

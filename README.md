@@ -12,4 +12,9 @@ Après avoir cloné le repository, Il vous faudra installer les packages avec `n
 
 Vous devrez faire une copie du fichier `.env.example` que vous mettrez au même niveau (racine du backend). Il vous faudra ensuite le renommer en `.env` et remplir les informations de connexion nécessaires.
 
+## Lancement du back-end
 Une fois terminé, vous pourrez lancer l'API en tapant `nodemon server` dans la console
+
+## Création de la base de données
+Lancez la commande `npx sequelize db:migrate` pour générer les tables utiles au fonctionnement de l'appli.
+Vous pouvez aussi ajouter 2 profils d'utilisateurs (un utilisatur et un administateur) dans la base de donnée avec la commande `npx sequelize db:seed:all`
