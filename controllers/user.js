@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');//Permet de créer un token utilisateur
 const fs = require('fs'); //système de gestion de fichier de Node
 
 const {User} = require('../models/index');
-// const User =require('../models/User');
 
 const passwordValidator = require('password-validator');
 const schema = new passwordValidator();//On crée un schema pour obtenir des mots de passe plus sécurisés
@@ -28,7 +27,7 @@ exports.signup = (req, res, next) => {
           password: hash//le mot de passe crypté
         })
           .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-          .catch(error => res.status(400).json({ error }));
+          .catch(error => res.status(400).json({ error: 'Ces identifiants sont déjà utilisés' }));
       })
       .catch(error => res.status(500).json({ error }));
 };
@@ -132,7 +131,7 @@ exports.modifyPassword = (req, res, next) => {
   if(id === userId) {
     User.findOne({ where: { id: id } })
       .then(user => {
-          bcrypt.hash(req.body.password, 10)
+          bcrypt.hash(password, 10)
             .then((hash) => {
               user.update({
                 password: hash,

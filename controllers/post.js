@@ -139,25 +139,6 @@ exports.isLiked = (req, res, next) => {
   .catch(error => res.status(404).json({ error }));
 };
 
-//Afficher tous les commentaires d'un post
-// exports.getComments = (req, res, next) => {
-//   Comment.findAll({
-//     where: { postId: req.params.id },
-//     include: [{
-//       model: User
-//     }]
-//   })//On récupère le post correspondant à l'id
-//   .then(comment => res.status(200).json(comment))
-//   .catch(error => res.status(404).json({ error }));
-// };
-
-//Afficher un post
-// exports.getOnePost = (req, res, next) => {
-//   Post.findOne({ id: req.params.id })//On récupère le post correspondant à l'id
-//   .then(post => res.status(200).json(post))
-//   .catch(error => res.status(404).json({ error }));
-// };
-
 //Afficher tous les posts
 exports.getAllPosts = (req, res, next) => {
   Post.findAll({
@@ -187,7 +168,6 @@ exports.commentPost = (req, res, next) => {
   const user = decodedToken.userId;
   const postId = req.params.id;
   const content = req.body.content;
-  console.log(content);
   if (content !== null) {
     Comment.create ({
       UserId: user,
@@ -218,7 +198,6 @@ exports.deleteCommentPost = (req, res, next) => {
   const isAdmin = decodedToken.isAdmin;//On récupère l'userId du token décrypté
   Comment.findOne({ where: { id: id } })
     .then(comment => {
-      console.log(comment);
       if(comment.UserId == userId || isAdmin == true) {
         comment.destroy({ where: { id: id } }),
         Post.findOne({ where: { id: idPost } })//On sélectionne le post par son id
@@ -236,4 +215,3 @@ exports.deleteCommentPost = (req, res, next) => {
     })
     .catch(error => res.status(500).json({ error }));
 };
-
