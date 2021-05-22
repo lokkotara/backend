@@ -17,4 +17,4 @@ Une fois terminé, vous pourrez lancer l'API en tapant `nodemon server` dans la 
 
 ## Création de la base de données
 Lancez la commande `npx sequelize db:migrate` pour générer les tables utiles au fonctionnement de l'appli.
-Vous pouvez aussi ajouter 2 profils d'utilisateurs (un utilisatur et un administateur) dans la base de donnée avec la commande `npx sequelize db:seed:all`
+Vous pouvez aussi ajouter 2 profils d'utilisateurs (un utilisateur et un administateur) dans la base de donnée avec la commande `npx sequelize db:seed:all`
