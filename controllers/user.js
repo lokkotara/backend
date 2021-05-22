@@ -23,7 +23,7 @@ exports.signup = (req, res, next) => {
       .then(hash => {
         User.create({
           username:req.body.username,
-          email: req.body.email,//L'adresse mail cryptée
+          email: req.body.email,//L'adresse mail
           password: hash//le mot de passe crypté
         })
           .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
