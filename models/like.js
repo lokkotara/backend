@@ -1,5 +1,5 @@
 'use strict';
-const {Sequelize,DataTypes, database} = require('./connexion');
+const {Sequelize,DataTypes, database} = require('../config/connexion');
 
 const Like= database.define('Like', {
         postId: DataTypes.INTEGER,

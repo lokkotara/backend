@@ -3,7 +3,7 @@ const router = express.Router();//Permet de charger le middleware niveau routeur
 
 const postCtrl = require('../controllers/post');//On appelle la logique métier de nos routes
 const auth = require('../middleware/auth');//On appelle le middleware d'authentification
-const multer = require('../middleware/multer-config');//et celui pour la gestion des images
+const multer = require('../middleware/multer-config-posts');//et celui pour la gestion des images
 
 router.post('/', auth, multer, postCtrl.createPost);//Permet de créer un post
 router.patch('/:id', auth, multer, postCtrl.modifyPost);//Permet de modifier un post existant

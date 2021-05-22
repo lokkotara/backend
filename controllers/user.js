@@ -100,15 +100,15 @@ exports.modifyUser = (req, res, next) => {
         //Si une nouvelle image est reçue dans la requête
         if (req.file) {
           if (user.image !== null){
-            const fileName = user.image.split('/images/')[1]
-            fs.unlink(`images/${fileName}`, (err => {//On supprime l'ancienne image
+            const fileName = user.image.split('/images/avatars/')[1]
+            fs.unlink(`images/avatars/${fileName}`, (err => {//On supprime l'ancienne image
               if (err) console.log(err);
               else {
                   console.log("Image supprimée: " + fileName);
               }
             }))
           }
-          req.body.image = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+          req.body.image = `${req.protocol}://${req.get('host')}/images/avatars/${req.file.filename}`;
         }
         delete(req.body.isAdmin);
         user.update( {...req.body, id: req.params.id} )
@@ -130,7 +130,7 @@ exports.modifyPassword = (req, res, next) => {
   const password = req.body.password;
   if(id === userId) {
     User.findOne({ where: { id: id } })
-      .then(user => {
+    .then(user => {
           bcrypt.hash(password, 10)
             .then((hash) => {
               user.update({
@@ -159,8 +159,8 @@ exports.deleteUser = (req, res, next) => {
     User.findOne({ where: { id: id } })
         .then(user => {
           if (user.image !== null){
-            const fileName = user.image.split('/images/')[1]
-            fs.unlink(`images/${fileName}`, (err => {//On supprime l'ancienne image
+            const fileName = user.image.split('/images/avatars/')[1]
+            fs.unlink(`images/avatars/${fileName}`, (err => {//On supprime l'ancienne image
               if (err) console.log(err);
               else {
                   console.log("Image supprimée: " + fileName);

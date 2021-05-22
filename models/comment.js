@@ -1,5 +1,5 @@
 'use strict';
-const {Sequelize,DataTypes, database} = require('./connexion');
+const {Sequelize,DataTypes, database} = require('../config/connexion');
 
 const Comment= database.define('Comment', {
         content: DataTypes.STRING,

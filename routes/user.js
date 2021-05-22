@@ -11,7 +11,7 @@ router.post('/login', userCtrl.login);//Connecte un utilisateur existant
 router.get("/profil/:id", auth, multer, userCtrl.getOneUser);//Route pour obtenir un utilisateur
 router.get("/profil", auth, multer, userCtrl.getAllUsers);//Route pour obtenir tous les utilisateurs
 router.patch("/profil/:id", auth, multer, userCtrl.modifyUser);//Route pour modifier un utilisateur
-router.patch("/profil/:id/password", auth, multer, userCtrl.modifyPassword);//Route pour modifier le mot de passe
+router.patch("/profil/:id/password", auth, userCtrl.modifyPassword);//Route pour modifier le mot de passe
 router.delete("/profil/:id", auth, userCtrl.deleteUser);//Route pour supprimer un utilisateur
 
 module.exports = router;
