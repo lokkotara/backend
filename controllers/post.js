@@ -27,7 +27,7 @@ exports.modifyPost = (req, res, next) => {
   Post.findOne({ where: { id: id } })
     .then(post => {
       if(post.UserId === userId) {
-        if (req.file) {
+        if (req.file) { 
           if (post.image !== null){
             const fileName = post.image.split('/images/posts/')[1]
             fs.unlink(`images/posts/${fileName}`, (err => {//On supprime l'ancienne image

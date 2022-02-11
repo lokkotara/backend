@@ -14,7 +14,7 @@ router.get('/:id/like', auth, postCtrl.getLike);//Permet de récupérer les like
 router.get('/:idPost/like/:id', auth, postCtrl.isLiked);//Permet de récupérer les likes
 
 router.post('/:id/comment', auth, postCtrl.commentPost);//Permet de commenter le post
-router.delete('/:idPost/comment/:id', auth, postCtrl.deleteCommentPost);//Permet de commenter le post
+router.delete('/:idPost/comment/:id', auth, postCtrl.deleteCommentPost);//Permet de supprimer le commentaire
 router.get('/', auth, postCtrl.getAllPosts);//Récupère tous les posts
 
 module.exports = router;
